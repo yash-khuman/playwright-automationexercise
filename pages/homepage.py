@@ -10,6 +10,10 @@ class HomePage:
         self.signup_login_link = page.get_by_role("link", name=" Signup / Login")
         self.delete_account_button = page.get_by_role("link", name=" Delete Account")
 
+    def navigate_to_homepage(self):
+        self.page.goto("https://automationexercise.com/")
+        self.page.wait_for_load_state('domcontentloaded',timeout=50000)
+
     def identify_current_username(self,expected_username : str):
         expect(self.page.get_by_text(f"Logged in as {expected_username}")).to_be_visible()
 

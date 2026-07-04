@@ -1,4 +1,5 @@
 from playwright.sync_api import Page,expect
+from utils.helpers import Helper
 
 
 
@@ -30,6 +31,20 @@ class LoginPage:
         self.zip_code = page.locator("#zipcode")
         self.mobile_number = page.get_by_role("textbox", name="Mobile Number *")
         self.create_account_button = page.get_by_role("button", name="Create Account")
+        self.login_button = page.get_by_role("button", name="Login")
+        self.login_with_email = page.locator("form").filter(has_text="Login").get_by_placeholder("Email Address")
+        self.login_with_password = page.get_by_role("textbox", name="Password")
+
+    def login(self,email : str,password : str):
+        from pages.homepage import HomePage
+        self.login_with_email.fill(email)
+        self.login_with_password.fill(password)
+        self.login_button.click()
+        self.page.wait_for_load_state('domcontentloaded')
+        
+        Helper.close_ads(self.page)
+        return HomePage(self.page)
+
 
     def verify_loginpage_headings(self):
         expect(self.login_to_your_account_heading).to_be_visible(timeout=20000)

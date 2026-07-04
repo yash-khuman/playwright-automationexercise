@@ -40,3 +40,21 @@ temp_user = User(
     zipcode=str(fake.pincode_in_state()),
     mobile_number=fake.phone_number()
 )
+
+main_user = User(
+    username="testmainuser",
+    lastname="test",
+    email="testmainuser@test.com",
+    password="test123",
+    gender="Male",
+    birth_date="1",
+    birth_month="8",
+    birth_year="2004",
+    company_name="test_company",
+    address1="test_add1",
+    address2="test_add2",
+    state="maharashtra",
+    city="mumbai",
+    zipcode="123456",
+    mobile_number="1234567890"
+)
