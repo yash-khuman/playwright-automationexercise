@@ -34,6 +34,7 @@ class LoginPage:
         self.login_button = page.get_by_role("button", name="Login")
         self.login_with_email = page.locator("form").filter(has_text="Login").get_by_placeholder("Email Address")
         self.login_with_password = page.get_by_role("textbox", name="Password")
+        self.email_or_password_is_incorrect = page.get_by_text("Your email or password is")
 
     def login(self,email : str,password : str):
         from pages.homepage import HomePage
