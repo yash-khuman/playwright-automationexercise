@@ -86,3 +86,23 @@ def test_logout_user(page_fixture):
 
     login_page = home_page.logout()
     login_page.verify_loginpage_headings()
+
+
+def test_register_user_with_existing_email(page_fixture):
+
+    home_page = HomePage(page_fixture)
+
+    home_page.navigate_to_homepage()
+
+    home_page.assert_navigation_to_homepage()
+    login_page = home_page.navigate_to_loginpage()
+
+    login_page.verify_loginpage_headings()
+    login_page.signup_with_name.fill("existing_username")
+    login_page.signup_with_email.fill(main_user.email)
+    login_page.sigup_button.click()
+
+    login_page.page.wait_for_load_state('domcontentloaded')
+    
+    expect(login_page.email_already_exist).to_be_visible()
+    login_page.verify_loginpage_headings()
