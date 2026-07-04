@@ -1,10 +1,11 @@
 from pages.homepage import HomePage
 from utils.helpers import Helper
+from test_data.users import temp_user
 
 
 def test_1(page_fixture,worker_id):
-    first_name = f"{worker_id}_yashhop123"
-    email = f"{worker_id}sy789auip@h.com"
+    first_name = temp_user.username
+    email = temp_user.email
 
     page_fixture.goto("https://automationexercise.com/")
     home_page = HomePage(page_fixture)
