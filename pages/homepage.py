@@ -1,7 +1,5 @@
 from playwright.sync_api import Page,expect
 
-
-
 class HomePage:
 
     def __init__(self, page : Page):
@@ -9,6 +7,15 @@ class HomePage:
         self.homepage_heading = page.get_by_role("heading", name="AutomationExercise")
         self.signup_login_link = page.get_by_role("link", name=" Signup / Login")
         self.delete_account_button = page.get_by_role("link", name=" Delete Account")
+        self.logout_link = page.get_by_role("link", name=" Logout")
+
+    def logout(self):
+        from pages.loginpage import LoginPage
+
+        self.logout_link.click()
+        self.page.wait_for_load_state('domcontentloaded')
+
+        return LoginPage(self.page)
 
     def navigate_to_homepage(self):
         self.page.goto("https://automationexercise.com/")

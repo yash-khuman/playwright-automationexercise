@@ -72,3 +72,17 @@ def test_login_user_with_incorrect_email_and_password(page_fixture):
 
     login_page.verify_loginpage_headings()
         
+
+def test_logout_user(page_fixture):
+
+    home_page = HomePage(page_fixture)
+
+    home_page.navigate_to_homepage()
+    login_page = home_page.navigate_to_loginpage()
+    login_page.verify_loginpage_headings()
+
+    home_page = login_page.login(main_user.email,main_user.password)
+    home_page.identify_current_username(main_user.username)
+
+    login_page = home_page.logout()
+    login_page.verify_loginpage_headings()
