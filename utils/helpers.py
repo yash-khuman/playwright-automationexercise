@@ -1,4 +1,8 @@
 from playwright.sync_api import Page, TimeoutError
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+TEST_FILES = PROJECT_ROOT / "test_data" / "test_files"
 
 class Helper:
     @staticmethod
@@ -20,3 +24,13 @@ class Helper:
                 continue
             except Exception:
                 continue
+
+    @staticmethod
+    def get_test_file(file_name : str) -> Path:
+        path = TEST_FILES / file_name
+
+        if not path.exists():
+            raise FileNotFoundError(f"Test File Was Not Found : {path}")
+        
+        return path
+        

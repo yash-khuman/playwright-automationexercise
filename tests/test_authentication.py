@@ -106,3 +106,6 @@ def test_register_user_with_existing_email(page_fixture):
     
     expect(login_page.email_already_exist).to_be_visible()
     login_page.verify_loginpage_headings()
+
+
+    

@@ -1,4 +1,5 @@
 from playwright.sync_api import Page,expect
+from utils.helpers import Helper
 
 class HomePage:
 
@@ -8,6 +9,19 @@ class HomePage:
         self.signup_login_link = page.get_by_role("link", name=" Signup / Login")
         self.delete_account_button = page.get_by_role("link", name=" Delete Account")
         self.logout_link = page.get_by_role("link", name=" Logout")
+        self.contact_us_link = page.get_by_role("link", name=" Contact us")
+
+    def navigate_to_contact_us_page(self):
+        from pages.contact_us_page import ContactUs
+
+        self.contact_us_link.click()
+        self.page.wait_for_load_state('domcontentloaded')
+        Helper.close_ads(self.page)
+        
+
+        return ContactUs(self.page)
+
+
 
     def logout(self):
         from pages.loginpage import LoginPage
@@ -16,6 +30,7 @@ class HomePage:
         self.page.wait_for_load_state('domcontentloaded')
 
         return LoginPage(self.page)
+    
 
     def navigate_to_homepage(self):
         self.page.goto("https://automationexercise.com/")
