@@ -13,6 +13,17 @@ class HomePage:
 
         self.test_cases_link = page.get_by_role("link", name=" Test Cases")
 
+        self.products_link = page.get_by_role("link", name=" Products")
+
+    def navigate_to_products_page(self):
+        from pages.products_page import ProductPage
+
+        self.products_link.click()
+        Helper.close_ads(self.page)
+        self.page.wait_for_load_state('domcontentloaded')
+
+        return ProductPage(self.page)
+
 
     def navigate_to_test_cases_page(self):
         from pages.testcases_page import TestCases
