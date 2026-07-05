@@ -11,6 +11,18 @@ class HomePage:
         self.logout_link = page.get_by_role("link", name=" Logout")
         self.contact_us_link = page.get_by_role("link", name=" Contact us")
 
+        self.test_cases_link = page.get_by_role("link", name=" Test Cases")
+
+
+    def navigate_to_test_cases_page(self):
+        from pages.testcases_page import TestCases
+
+        self.test_cases_link.click()
+        Helper.close_ads(self.page)
+        self.page.wait_for_load_state('domcontentloaded')
+
+        return TestCases(self.page)
+
     def navigate_to_contact_us_page(self):
         from pages.contact_us_page import ContactUs
 
