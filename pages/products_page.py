@@ -7,9 +7,18 @@ class ProductPage:
         self.page = page
         self.all_products_heading = page.get_by_role("heading", name="All Products")
         self.products = page.locator(".product-image-wrapper")
+        self._search_textbox = page.get_by_role("textbox", name="Search Product")
+        self._search_button = page.locator("#submit_search")
+
 
     def verify_all_products_headings(self):
         expect(self.all_products_heading).to_be_visible()
+
+    def search_products_by_value(self, search_value : str) -> None:
+        self._search_textbox.fill(search_value)
+        self._search_button.click()
+        Helper.close_ads(self.page)
+        self.page.wait_for_load_state()
 
     def product_by_index(self, index : int) -> "ProductCard":
 
@@ -20,6 +29,15 @@ class ProductPage:
         product_locator = self.products.nth(index-1)
 
         return ProductCard(product_locator=product_locator,page=self.page)
+    
+    def get_all_products(self) -> list["ProductCard"]:
+
+        all_products = []
+        for i in range(self.products.count()):
+            all_products.append(ProductCard(product_locator=self.products.nth(i),page=self.page))
+
+        return all_products
+
 
 
 
@@ -71,7 +89,11 @@ class ProductDetails:
         self._condition = self._root.locator("p").filter(has_text="Condition:")
         self._price = self._root.locator("span").locator("span")
 
-    def verify_product_details_is_visible(self):
+    @property
+    def name(self) -> str:
+        return self._name.inner_text()
+
+    def verify_product_details_is_visible(self) ->None:
         expect(self._name).to_be_visible()
         expect(self._category).to_be_visible()
         expect(self._availability).to_be_visible()
