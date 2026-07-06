@@ -1,5 +1,6 @@
 from playwright.sync_api import Page,expect
 from utils.helpers import Helper
+from test_data.users import main_user
 
 class HomePage:
 
@@ -14,6 +15,17 @@ class HomePage:
         self.test_cases_link = page.get_by_role("link", name=" Test Cases")
 
         self.products_link = page.get_by_role("link", name=" Products")
+
+        self._subscription_heading = page.get_by_role("heading", name="Subscription")
+        self._subscription_email = page.get_by_role("textbox", name="Your email address")
+        self._subscribe_arrow = page.locator("#subscribe")
+        self._subscription_success_message = page.get_by_text("You have been successfully")
+
+    def subscribe_with_email(self,email : str = main_user.email) -> None:
+        expect(self._subscription_heading).to_be_visible()
+        self._subscription_email.fill(email)
+        self._subscribe_arrow.click()
+        expect(self._subscription_success_message).to_be_visible(timeout=30000)
 
     def navigate_to_products_page(self):
         from pages.products_page import ProductPage
