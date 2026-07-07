@@ -2,6 +2,7 @@ from playwright.sync_api import Page,expect
 from utils.helpers import Helper
 from test_data.users import main_user
 
+
 class HomePage:
 
     def __init__(self, page : Page):
@@ -11,6 +12,7 @@ class HomePage:
         self.delete_account_button = page.get_by_role("link", name=" Delete Account")
         self.logout_link = page.get_by_role("link", name=" Logout")
         self.contact_us_link = page.get_by_role("link", name=" Contact us")
+        self.cart_link = page.get_by_role("link", name=" Cart")
 
         self.test_cases_link = page.get_by_role("link", name=" Test Cases")
 
@@ -20,6 +22,15 @@ class HomePage:
         self._subscription_email = page.get_by_role("textbox", name="Your email address")
         self._subscribe_arrow = page.locator("#subscribe")
         self._subscription_success_message = page.get_by_text("You have been successfully")
+
+    def navigate_to_cart_page(self):
+        from pages.cart_page import Cart
+
+        self.cart_link.click()
+        Helper.close_ads(self.page)
+        self.page.wait_for_load_state('domcontentloaded')
+
+        return Cart(self.page)
 
     def subscribe_with_email(self,email : str = main_user.email) -> None:
         expect(self._subscription_heading).to_be_visible()
