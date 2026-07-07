@@ -76,6 +76,13 @@ class ProductCard:
     def verify_name(self, expected_name : str) -> None:
         expect(self._name).to_have_text(expected_name)
 
+    def add_to_cart(self) -> "AddToCartModal":
+        self.root.hover()
+        self._overlay_add_to_cart_link.click()
+        Helper.close_ads(self._page)
+
+        return AddToCartModal(self._page)
+
 
 class ProductDetails:
 
@@ -103,6 +110,36 @@ class ProductDetails:
 
     
 
+class AddToCartModal:
+
+    def __init__(self, page : Page):
+        self._page = page
+        self._root = self._page.locator(".modal-content")
+        self._added_heading = self._root.get_by_text("Added!")
+        self._your_product_has_been_added_message = self._root.get_by_text("Your product has been added to cart.")
+        self._view_cart_link = self._root.get_by_role("link",name="View Cart")
+        self._continue_shopping_button = self._root.get_by_role("button",name="Continue Shopping")
+
+    def view_cart(self):
+        from pages.cart_page import Cart
+
+        self._view_cart_link.click()
+        Helper.close_ads(self._page)
+        self._page.wait_for_load_state()
+
+        return Cart(self._page)
+    
+    def continue_shopping(self) -> ProductPage:
+
+        self._continue_shopping_button.click()
+        Helper.close_ads(self._page)
+        expect(self._root).not_to_be_visible()
+
+        return ProductPage(self._page)
+    
+    def verify_product_is_added(self):
+        expect(self._added_heading).to_be_visible()
+        expect(self._your_product_has_been_added_message).to_be_visible()
 
 
 
