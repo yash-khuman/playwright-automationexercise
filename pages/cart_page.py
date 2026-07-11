@@ -1,4 +1,4 @@
-from playwright.sync_api import Page,expect
+from playwright.sync_api import Page,expect,Locator
 from test_data.users import main_user
 
 
@@ -11,7 +11,20 @@ class Cart:
         self._subscribe_arrow = page.locator("#subscribe")
         self._subscription_success_message = page.get_by_text("You have been successfully")
 
+        self.items = page.locator("#cart_info_table tbody > tr")
+
         self.cart_heading = page.get_by_text("Shopping Cart")
+
+    def cartitem_by_index(self, index : int) -> "CartItem":
+
+        count = self.items.count()
+        #print(count)
+        if index < 1 or index > count:
+            raise ValueError(f"product index must be between 1 and {count}")
+        
+        cartitem_locator = self.items.nth(index-1)
+
+        return CartItem(row_locator=cartitem_locator,page=self.page)
 
     def verify_cart_heading(self):
         expect(self.cart_heading).to_be_visible()
@@ -22,3 +35,40 @@ class Cart:
         self._subscription_email.fill(email)
         self._subscribe_arrow.click()
         expect(self._subscription_success_message).to_be_visible(timeout=30000)
+
+
+
+class CartItem:
+
+    def __init__(self, row_locator : Locator, page : Page):
+        self._page = page
+        self._root = row_locator
+        self._category = self._root.locator(".cart_description p")
+        self._price = self._root.locator(".cart_price p")
+        self._quantity = self._root.locator(".cart_quantity button")
+        self._total = self._root.locator(".cart_total .cart_total_price")
+        self._delete_button = self._root.locator(".cart_quantity_delete")
+        self._name = self._root.locator(".cart_description h4")
+
+    @property
+    def name(self) -> str:
+        return " ".join(self._name.inner_text().split())
+    
+    @property
+    def price(self) -> str:
+        return self._price.inner_text()
+    
+    def verify_name(self, expected_name : str) -> None:
+        expect(self._name).to_have_text(expected_name)
+
+    @property
+    def quantity(self) -> str:
+        return self._quantity.inner_text()
+    
+    @property
+    def total(self) -> str:
+        return self._total.inner_text()
+    
+    
+        
+        
