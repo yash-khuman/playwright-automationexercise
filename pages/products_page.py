@@ -10,6 +10,18 @@ class ProductPage:
         self._search_textbox = page.get_by_role("textbox", name="Search Product")
         self._search_button = page.locator("#submit_search")
 
+        self._cart_link = page.get_by_role("link", name=" Cart")
+
+    
+    def navigate_to_cart_page(self):
+        from pages.cart_page import Cart
+
+        self._cart_link.click()
+        Helper.close_ads(self.page)
+        self.page.wait_for_load_state('domcontentloaded')
+
+        return Cart(self.page)
+
 
     def verify_all_products_headings(self):
         expect(self.all_products_heading).to_be_visible()
@@ -52,6 +64,10 @@ class ProductCard:
         self._add_to_cart_link = self.root.locator(".productinfo.text-center").get_by_role("link",name="Add to cart")
         self._price = self.root.locator(".productinfo.text-center h2")
         self._name = self.root.locator(".productinfo.text-center p")
+
+    @property
+    def product_id(self) -> str:
+        return self._overlay_add_to_cart_link.get_attribute("data-product-id")
 
 
     def view_product(self) -> "ProductDetails":
