@@ -84,7 +84,7 @@ class ProductCard:
 class ProductDetails:
 
     def __init__(self,page : Page):
-        self.page = page
+        self._page = page
         self._root = page.locator(".product-information")
         self._name = self._root.locator("h2")
         self._category = self._root.locator("p").filter(has_text="Category:")
@@ -92,10 +92,23 @@ class ProductDetails:
         self._brand = self._root.locator("p").filter(has_text="Brand:")
         self._condition = self._root.locator("p").filter(has_text="Condition:")
         self._price = self._root.locator("span").locator("span")
+        self._quantity = self._root.locator("#quantity")
+        self._add_to_cart = self._root.get_by_role("button",name="Add to cart")
+
+    def add_to_cart(self) -> "AddToCartModal":
+        expect(self._add_to_cart).to_be_visible()
+        self._add_to_cart.click()
+        Helper.close_ads(self._page)
+
+        return AddToCartModal(self._page)
 
     @property
     def name(self) -> str:
-        return self._name.inner_text()
+        return " ".join(self._name.inner_text().split())
+    
+    def set_quantity(self,value : str) -> None:
+        self._quantity.fill(value)
+        
 
     def verify_product_details_is_visible(self) ->None:
         expect(self._name).to_be_visible()
