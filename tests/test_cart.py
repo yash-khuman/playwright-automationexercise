@@ -48,3 +48,25 @@ def test_add_products_in_cart(page_fixture):
     assert cartitem1.total == product1_price
     assert cartitem2.total == product2_price
 
+
+
+def test_verify_product_quantity_in_cart(page_fixture):
+    home_page = HomePage(page_fixture)
+
+    home_page.navigate_to_homepage()
+    home_page.assert_navigation_to_homepage()
+
+    product1 = home_page.product_by_index(1)
+    product1_details = product1.view_product()
+    
+    product1_name = product1_details.name
+    product1_details.set_quantity(value="4")
+
+    add_to_cart_modal = product1_details.add_to_cart()
+    cart_page = add_to_cart_modal.view_cart()
+
+    cartitem1 = cart_page.cartitem_by_index(1)
+
+    assert cartitem1.name == product1_name
+    assert cartitem1.quantity == "4"
+    
