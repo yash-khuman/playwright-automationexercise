@@ -13,6 +13,7 @@ class HomePage:
         self.logout_link = page.get_by_role("link", name=" Logout")
         self.contact_us_link = page.get_by_role("link", name=" Contact us")
         self.cart_link = page.get_by_role("link", name=" Cart")
+        self.products = page.locator(".product-image-wrapper")
 
         self.test_cases_link = page.get_by_role("link", name=" Test Cases")
 
@@ -105,3 +106,15 @@ class HomePage:
         self.page.wait_for_load_state('domcontentloaded')
 
         return LoginPage(self.page)
+    
+    
+    def product_by_index(self, index : int):
+        from pages.products_page import ProductCard
+
+        count = self.products.count()
+        if index < 1 or index > count:
+            raise ValueError(f"product index must be between 1 and {count}")
+        
+        product_locator = self.products.nth(index-1)
+
+        return ProductCard(product_locator=product_locator,page=self.page)
