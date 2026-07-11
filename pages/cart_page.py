@@ -13,7 +13,19 @@ class Cart:
 
         self.items = page.locator("#cart_info_table tbody > tr")
 
+        self.signup_login_link = page.get_by_role("link", name=" Signup / Login")
+
         self.cart_heading = page.get_by_text("Shopping Cart")
+
+
+
+    
+    def navigate_to_loginpage(self):
+        from pages.loginpage import LoginPage
+        self.signup_login_link.click()
+        self.page.wait_for_load_state('domcontentloaded')
+
+        return LoginPage(self.page)
 
     def cartitem_by_index(self, index : int) -> "CartItem":
 
@@ -36,6 +48,15 @@ class Cart:
         self._subscribe_arrow.click()
         expect(self._subscription_success_message).to_be_visible(timeout=30000)
 
+    
+    def get_all_items(self) -> list["CartItem"]:
+
+        all_items = []
+        for i in range(self.items.count()):
+            all_items.append(CartItem(row_locator=self.items.nth(i),page=self.page))
+
+        return all_items
+
 
 
 class CartItem:
@@ -51,8 +72,17 @@ class CartItem:
         self._name = self._root.locator(".cart_description h4")
 
     @property
+    def product_id(self) -> str:
+        return self._delete_button.get_attribute("data-product-id")
+
+    @property
     def name(self) -> str:
         return " ".join(self._name.inner_text().split())
+    
+    def remove_item(self) -> None:
+        self._delete_button.click()
+        self._root.wait_for(state="detached")
+        
     
     @property
     def price(self) -> str:
