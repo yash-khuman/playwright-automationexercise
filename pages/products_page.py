@@ -48,15 +48,11 @@ class ProductCard:
 
         self._page = page
         self._view_product_link = self.root.locator(".choose").get_by_role("link",name="View Product")
-        self._overlay_add_to_cart_link = self.root.locator(".product-overlay").get_by_role("link",name="Add to cart")
+        self._overlay_add_to_cart_link = self.root.locator(".product-overlay").get_by_text("Add to cart")
         self._add_to_cart_link = self.root.locator(".productinfo.text-center").get_by_role("link",name="Add to cart")
         self._price = self.root.locator(".productinfo.text-center h2")
         self._name = self.root.locator(".productinfo.text-center p")
 
-
-    def add_to_cart(self):
-        self.root.hover()
-        self._overlay_add_to_cart_link.click()
 
     def view_product(self) -> "ProductDetails":
         self._view_product_link.click()
@@ -67,7 +63,7 @@ class ProductCard:
 
     @property
     def name(self) -> str:
-        return self._name.inner_text()
+        return " ".join(self._name.inner_text().split())
     
     @property
     def price(self) -> str:
@@ -78,6 +74,7 @@ class ProductCard:
 
     def add_to_cart(self) -> "AddToCartModal":
         self.root.hover()
+        expect(self._overlay_add_to_cart_link).to_be_visible()
         self._overlay_add_to_cart_link.click()
         Helper.close_ads(self._page)
 
