@@ -1,0 +1,17 @@
+.git
+.gitignore
+.github
+
+.venv
+.pytest_cache
+__pycache__
+
+playwright-report
+test-results
+screenshots
+traces
+videos
+
+.env
+
+README.md
